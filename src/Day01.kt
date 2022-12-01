@@ -3,8 +3,7 @@ fun main() {
         .split("\n\n")
         .map { chunk ->
             chunk.split("\n")
-                .map(String::toInt)
-                .sum()
+                .sumOf(String::toInt)
         }
 
     fun part1(input: List<String>): Int = caloriesPerElves(input).max()
