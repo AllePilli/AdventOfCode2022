@@ -1,19 +1,22 @@
 fun main() {
-    fun part1(input: List<String>): Int = input.joinToString(separator = "\n")
+    fun caloriesPerElves(input: List<String>) = input.joinToString(separator = "\n")
         .split("\n\n")
-        .maxOf { chunk ->
+        .map { chunk ->
             chunk.split("\n")
-                .map(String::toLong)
+                .map(String::toInt)
                 .sum()
-                .toInt()
         }
 
-    fun part2(input: List<String>): Int {
-        return input.size
-    }
+    fun part1(input: List<String>): Int = caloriesPerElves(input).max()
+
+    fun part2(input: List<String>): Int = caloriesPerElves(input)
+        .sortedDescending()
+        .take(3)
+        .sum()
 
     val testInput = readInput("Day01_test")
     check(part1(testInput) == 24000)
+    check(part2(testInput) == 45000)
 
     val input = readInput("Day01")
     println(part1(input))
