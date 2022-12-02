@@ -1,27 +1,22 @@
 fun main() {
-    fun part1(input: List<String>) = input
-        .map { line ->
-            line.split(" ")
-                .map { it.first().toHand() }
-        }.sumOf { (opponent, player) ->
-            matchScore(player, opponent)
-        }
+    fun prepareInput(input: List<String>) = input.map { line ->
+        line.split(" ").map(String::first)
+    }
 
-    fun part2(input: List<String>) = input
-        .map { line -> line.split(" ").map(String::first) }
-        .map { (opponent, outcome) ->
-            val opponentHand = opponent.toHand()
-            opponentHand to outcome.toHand(opponentHand)
-        }
-        .sumOf { (opponent, player) ->
-            matchScore(player, opponent)
-        }
+    fun part1(input: List<List<Char>>) = input.sumOf { (opponent, player) ->
+        matchScore(player.toHand(), opponent.toHand())
+    }
 
-    val testInput = readInput("Day02_test")
+    fun part2(input: List<List<Char>>) = input.sumOf { (opponent, outcome) ->
+        val opponentHand = opponent.toHand()
+        matchScore(outcome.toHand(opponentHand), opponentHand)
+    }
+
+    val testInput = prepareInput(readInput("Day02_test"))
     check(part1(testInput) == 15)
     check(part2(testInput) == 12)
 
-    val input = readInput("Day02")
+    val input = prepareInput(readInput("Day02"))
     val part1 = part1(input)
     val part2 = part2(input)
     println(part1)
