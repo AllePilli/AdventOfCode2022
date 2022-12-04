@@ -1,5 +1,3 @@
-import kotlin.system.measureTimeMillis
-
 fun main() {
     fun List<String>.prepareInput(): List<Pair<IntRange, IntRange>> = map { line ->
         line.split(",")
@@ -28,17 +26,11 @@ fun main() {
     check(part2(testInput) == 4)
 
     val input = readInput("Day04").prepareInput()
-    measureTimeMillis {
-        part1(input).also {
-            check(it == 450)
-            print(it)
-        }
-    }.let { println(" in ${it}ms") }
+    measureAndPrintTimeMillis {
+        checkAndPrint(part1(input), 450)
+    }
 
-    measureTimeMillis {
-        part2(input).also {
-            check(it == 837)
-            print(it)
-        }
-    }.let { println(" in ${it}ms") }
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), 837)
+    }
 }

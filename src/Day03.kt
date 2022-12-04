@@ -1,5 +1,3 @@
-import kotlin.system.measureNanoTime
-
 fun main() {
     fun part1(input: List<String>): Int = input.sumOf { line ->
         val compartmentSize = line.length / 2
@@ -21,19 +19,13 @@ fun main() {
     check(part2(testInput) == 70)
 
     val input = readInput("Day03")
-    measureNanoTime {
-        part1(input).also {
-            check(it == 8240)
-            print(it)
-        }
-    }.let { println(" in ${it}ns") }
+    measureAndPrintTimeNano {
+        checkAndPrint(part1(input), 8240)
+    }
 
-    measureNanoTime {
-        part2(input).also {
-            check(it == 2587)
-            print(it)
-        }
-    }.let { println(" in ${it}ns") }
+    measureAndPrintTimeNano {
+        checkAndPrint(part2(input), 2587)
+    }
 }
 
 private val Char.priority: Int get() = code - if (isUpperCase()) 38 else 96
