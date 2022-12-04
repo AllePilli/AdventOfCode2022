@@ -1,30 +1,45 @@
-import kotlin.system.measureNanoTime
+import kotlin.system.measureTimeMillis
 
 fun main() {
-    fun part1(input: List<String>): Int = input.sumOf { line ->
+    fun List<String>.prepareInput(): List<Pair<IntRange, IntRange>> = map { line ->
         line.split(",")
             .map { part ->
-                part.split("-").let { (first, second) ->
-                    first.toInt()..second.toInt()
-                }
+                part.split("-")
+                    .let { (first, second) -> first.toInt()..second.toInt() }
             }
-            .let { (first, second) ->
-                val (longest, shortest) =
-                    if (first.last - first.first > second.last - second.first) first to second
-                    else second to first
-
-                if (longest.first <= shortest.first && longest.last >= shortest.last) 1 else 0 as Int
-            }
+            .let { (first, second) -> first to second }
     }
 
-    val testInput = readInput("Day04_test")
-    check(part1(testInput) == 2)
+    fun part1(input: List<Pair<IntRange, IntRange>>): Int = input.count { (first, second) ->
+        val (longest, shortest) =
+            if (first.last - first.first > second.last - second.first) first to second
+            else second to first
 
-    val input = readInput("Day04")
-    measureNanoTime {
+        longest.first <= shortest.first && longest.last >= shortest.last
+    }
+
+    fun part2(input: List<Pair<IntRange, IntRange>>): Int = input.count { (first, second) ->
+        val spots = mutableSetOf<Int>()
+        spots.addAll(first)
+        second.firstOrNull { spot -> spot in spots } != null
+    }
+
+    val testInput = readInput("Day04_test").prepareInput()
+    check(part1(testInput) == 2)
+    check(part2(testInput) == 4)
+
+    val input = readInput("Day04").prepareInput()
+    measureTimeMillis {
         part1(input).also {
             check(it == 450)
             print(it)
         }
-    }.let { println(" in ${it}ns") }
+    }.let { println(" in ${it}ms") }
+
+    measureTimeMillis {
+        part2(input).also {
+            check(it == 837)
+            print(it)
+        }
+    }.let { println(" in ${it}ms") }
 }
