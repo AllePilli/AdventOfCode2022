@@ -19,8 +19,7 @@ fun main() {
     }
 
     fun part2(input: List<Pair<IntRange, IntRange>>): Int = input.count { (first, second) ->
-        val spots = mutableSetOf<Int>()
-        spots.addAll(first)
+        val spots = first.toSet()
         second.firstOrNull { spot -> spot in spots } != null
     }
 
