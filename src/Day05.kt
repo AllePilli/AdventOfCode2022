@@ -49,11 +49,29 @@ fun main() {
         return config.joinToString(separator = "") { it.peek()!!.toString() }
     }
 
+    fun part2(input: List<String>): String {
+        val config = getStartingConfig(input)
+        val moves = getMoves(input)
+
+        moves.forEach { (amt, start, dest) ->
+            (0 ..< amt).map { config[start].pop() }
+                .asReversed()
+                .forEach { config[dest].push(it) }
+        }
+
+        return config.joinToString(separator = "") { it.peek()!!.toString() }
+    }
+
     val inputTest = readInput("Day05_test")
     check(part1(inputTest) == "CMZ")
+    check(part2(inputTest) == "MCD")
 
     val input = readInput("Day05")
     measureAndPrintTimeMillis {
-        checkAndPrint(part1(input))
+        checkAndPrint(part1(input), "VQZNJMWTR")
+    }
+
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), "NLCDCLVMQ")
     }
 }
