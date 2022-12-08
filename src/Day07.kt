@@ -1,5 +1,4 @@
 fun main() {
-    val lsCommandRgx = """\$ ls""".toRegex()
     val cdCommandRgx = """\$ cd (.*)""".toRegex()
     val fileRgx = """(\d+) (.*)""".toRegex()
     val dirRgx = """dir (.*)""".toRegex()
@@ -16,12 +15,11 @@ fun main() {
                     else -> currentDir.children.filterIsInstance<Directory>().find { it.name == dirName }!!
                 }
             } ?: fileRgx.matchEntire(line)?.groupValues?.drop(1)?.let { (size, fileName) ->
-                if (!currentDir.containsFile(fileName)) {
+                if (!currentDir.containsFile(fileName))
                     currentDir + File(fileName, size.toInt())
-                }
             } ?: dirRgx.matchEntire(line)?.groupValues?.drop(1)?.let { (dirName) ->
                 if (!currentDir.containsDirectory(dirName))
-                    directories += Directory(dirName, currentDir).also { currentDir.plus(it) }
+                    directories += Directory(dirName, currentDir).also(currentDir::plus)
             }
         }
 
@@ -32,13 +30,31 @@ fun main() {
         directory.totalSize.takeUnless { it > 100000 }
     }.sum()
 
+    fun part2(directories: List<Directory>): Int {
+        val totalSpace = 70000000
+        val neededSpace = 30000000
+        val totalUsedSpace = directories.first().totalSize
+        val totalAvailableSpace = totalSpace - totalUsedSpace
+        val toFreeUpSpace = neededSpace - totalAvailableSpace
+
+        return directories.mapNotNull { directory ->
+            directory.totalSize.takeUnless { it < toFreeUpSpace }
+        }.min()
+    }
+
     val testInput = prepareInput(readInput("Day07_test"))
     check(part1(testInput) == 95437)
+    check(part2(testInput) == 24933642)
 
     val input = prepareInput(readInput("Day07"))
     measureAndPrintTimeMillis {
         print("part1: ")
         checkAndPrint(part1(input), 1350966)
+    }
+
+    measureAndPrintTimeMillis {
+        print("part2: ")
+        checkAndPrint(part2(input), 6296435)
     }
 }
 
