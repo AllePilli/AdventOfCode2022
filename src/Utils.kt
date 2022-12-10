@@ -25,3 +25,23 @@ fun <T> checkAndPrint(actual: T, expected: T? = null) {
     if (expected != null) check(actual == expected)
     print(actual)
 }
+
+fun <T> List<List<T>>.getColumn(colIdx: Int) = firstOrNull()
+    ?.indices
+    ?.map { rowIdx ->
+        getOrNull(rowIdx)?.getOrNull(colIdx)
+    }
+    ?: emptyList()
+
+fun <T> List<List<T>>.getColumn(colIdx: Int, defaultValue: T) = firstOrNull()
+    ?.indices
+    ?.map { rowIdx ->
+        getOrNull(rowIdx)?.getOrNull(colIdx) ?: defaultValue
+    }
+    ?: emptyList()
+
+fun <T> List<List<T>>.transpose(): List<List<T>> = List(first().size) { col ->
+    List(size) { row ->
+        this[row][col]
+    }
+}
