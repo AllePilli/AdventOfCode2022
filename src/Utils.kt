@@ -26,10 +26,10 @@ fun <T> checkAndPrint(actual: T, expected: T? = null) {
     print(actual)
 }
 
-fun <T> List<List<T>>.getColumn(colIdx: Int) = firstOrNull()
+fun <T> List<List<T>>.getColumn(colIdx: Int): List<T> = firstOrNull()
     ?.indices
     ?.map { rowIdx ->
-        getOrNull(rowIdx)?.getOrNull(colIdx)
+        getOrNull(rowIdx)!!.getOrNull(colIdx)!!
     }
     ?: emptyList()
 
@@ -44,4 +44,26 @@ fun <T> List<List<T>>.transpose(): List<List<T>> = List(first().size) { col ->
     List(size) { row ->
         this[row][col]
     }
+}
+
+inline fun <T> Iterable<T>.multOf(selector: (T) -> Int): Int {
+    var product = 1
+    for (element in this) {
+        product *= selector(element)
+    }
+    return product
+}
+
+fun <T> List<List<T>>.onEdge(idx1: Int, idx2: Int): Boolean =
+    idx1 == 0 || idx1 == size - 1 || idx2 == 0 || idx2 == get(idx1).size - 1
+
+fun <T> List<List<T>>.getElementsUntilEdges(idx1: Int, idx2: Int): List<List<T>> = buildList {
+    val row = this@getElementsUntilEdges[idx1]
+    val col = this@getElementsUntilEdges.getColumn(idx2)
+
+    // In clockwise direction starting from top
+    add(col.take(idx1).asReversed())
+    add(row.takeLast(col.size - 1 - idx2))
+    add(col.takeLast(row.size - 1 - idx1))
+    add(row.take(idx2).asReversed())
 }
