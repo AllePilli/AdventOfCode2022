@@ -69,6 +69,13 @@ fun <T> List<List<T>>.getElementsUntilEdges(idx1: Int, idx2: Int): List<List<T>>
     add(row.take(idx2).asReversed())
 }
 
+fun Pair<Int, Int>.move(direction: Direction, amt: Int = 1) = when (direction) {
+    Direction.Up -> copy(second = second + amt)
+    Direction.Right -> copy(first = first + amt)
+    Direction.Down -> copy(second = second - amt)
+    Direction.Left -> copy(first = first - amt)
+}
+
 fun Pair<Int, Int>.discreteDistanceTo(other: Pair<Int, Int>) = abs(first - other.first) + abs(second - other.second)
 
 fun Pair<Int, Int>.touches(other: Pair<Int, Int>) = (first == other.first && abs(second - other.second) == 1)

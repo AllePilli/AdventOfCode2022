@@ -13,37 +13,45 @@ fun main() {
             }
     }
 
-    fun part1(input: List<Pair<Direction, Int>>): Int {
-        var posH = Pair(0, 0)
-        var posT = Pair(0, 0)
+    fun simulateRope(tailSize: Int, steps: List<Pair<Direction, Int>>): Int {
+        val rope = List(tailSize + 1) { Pair(0, 0) }.toMutableList()
 
-        fun Pair<Int, Int>.move(direction: Direction) = when (direction) {
-            Direction.Up -> copy(second = second + 1)
-            Direction.Right -> copy(first = first + 1)
-            Direction.Down -> copy(second = second - 1)
-            Direction.Left -> copy(first = first - 1)
-        }
-
-        return input.flatMap { (dir, amt) ->
+        return steps.flatMap { (dir, amt) ->
             buildList {
                 repeat(amt) {
-                    val nextH = posH.move(dir)
+                    rope[0] = rope[0].move(dir)
 
-                    if (nextH != posT && !posT.touches(nextH) && !posT.touchesDiagonally(nextH)) {
-                        posT = posH.copy()
+                    for (idx in 1 until rope.size) {
+                        if (rope[idx - 1] != rope[idx]
+                            && !rope[idx].touches(rope[idx - 1])
+                            && !rope[idx].touchesDiagonally(rope[idx - 1])) {
+                            rope[idx].directionsTo(rope[idx - 1]).forEach { direction ->
+                                rope[idx] = rope[idx].move(direction)
+                            }
+                        }
                     }
-                    posH = nextH
-                    add(posT)
+
+                    add(rope.last())
                 }
             }
         }.distinct().size
     }
 
-    val testInput = readInput("Day09_test").prepareInput()
-    check(part1(testInput) == 13)
+    fun part1(input: List<Pair<Direction, Int>>): Int = simulateRope(1, input)
+
+    fun part2(input: List<Pair<Direction, Int>>): Int = simulateRope(9, input)
+
+    val testInputPart1 = readInput("Day09_part1_test").prepareInput()
+    check(part1(testInputPart1) == 13)
+    val testInputPart2 = readInput("Day09_part2_test").prepareInput()
+    check(part2(testInputPart2) == 36)
 
     val input = readInput("Day09").prepareInput()
     measureAndPrintTimeMillis {
         checkAndPrint(part1(input), 6243)
+    }
+
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), 2630)
     }
 }
