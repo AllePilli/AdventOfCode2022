@@ -1,6 +1,7 @@
 import java.io.File
 import java.math.BigInteger
 import java.security.MessageDigest
+import kotlin.math.abs
 import kotlin.system.measureNanoTime
 import kotlin.system.measureTimeMillis
 
@@ -66,4 +67,21 @@ fun <T> List<List<T>>.getElementsUntilEdges(idx1: Int, idx2: Int): List<List<T>>
     add(row.takeLast(col.size - 1 - idx2))
     add(col.takeLast(row.size - 1 - idx1))
     add(row.take(idx2).asReversed())
+}
+
+fun Pair<Int, Int>.discreteDistanceTo(other: Pair<Int, Int>) = abs(first - other.first) + abs(second - other.second)
+
+fun Pair<Int, Int>.touches(other: Pair<Int, Int>) = (first == other.first && abs(second - other.second) == 1)
+        || (second == other.second && abs(first - other.first) == 1)
+
+fun Pair<Int, Int>.touchesDiagonally(other: Pair<Int, Int>) = other == copy(first + 1, second + 1)
+        || other == copy(first - 1, second + 1) || other == copy(first - 1, second - 1) || other == copy(first + 1, second - 1)
+
+fun Pair<Int, Int>.directionsTo(other: Pair<Int, Int>) = buildList {
+    if (first != other.first) add(if (first > other.first) Direction.Left else Direction.Right)
+    if (second != other.second) add(if (second > other.second) Direction.Down else Direction.Up)
+}
+
+enum class Direction {
+    Up, Right, Down, Left
 }
