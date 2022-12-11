@@ -8,8 +8,13 @@ import kotlin.system.measureTimeMillis
 /**
  * Reads lines from the given input txt file.
  */
-fun readInput(name: String) = File("src", "$name.txt")
-    .readLines()
+//fun readInput(name: String) = File("src", "$name.txt")
+//    .readLines()
+
+fun readInput(name: String): List<String> {
+    val dayName = if ('_' in name) name.split("_").first() else name
+    return File("src/$dayName", "$name.txt").readLines()
+}
 
 /**
  * Converts string to md5 hash.

@@ -1,3 +1,9 @@
+package Day01
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
+
 fun main() {
     fun caloriesPerElves(input: List<String>) = input.joinToString(separator = "\n")
         .split("\n\n")
@@ -18,6 +24,10 @@ fun main() {
     check(part2(testInput) == 45000)
 
     val input = readInput("Day01")
-    println(part1(input))
-    println(part2(input))
+    measureAndPrintTimeMillis {
+        checkAndPrint(part1(input), 72478)
+    }
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), 210367)
+    }
 }

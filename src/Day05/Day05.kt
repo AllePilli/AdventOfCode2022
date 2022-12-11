@@ -1,3 +1,8 @@
+package Day05
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
 import java.util.ArrayDeque
 
 @ExperimentalStdlibApi

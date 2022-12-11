@@ -1,3 +1,9 @@
+package Day04
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
+
 fun main() {
     fun List<String>.prepareInput(): List<Pair<IntRange, IntRange>> = map { line ->
         line.split(",")

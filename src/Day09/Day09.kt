@@ -1,3 +1,14 @@
+package Day09
+
+import Direction
+import checkAndPrint
+import directionsTo
+import measureAndPrintTimeMillis
+import move
+import readInput
+import touches
+import touchesDiagonally
+
 fun main() {
     fun List<String>.prepareInput() = map { line ->
         line.split(" ")

@@ -1,3 +1,12 @@
+package Day08
+
+import checkAndPrint
+import getElementsUntilEdges
+import measureAndPrintTimeMillis
+import multOf
+import onEdge
+import readInput
+
 fun main() {
     fun List<String>.prepareInput() = map { line -> line.map(Char::digitToInt) }
 

@@ -1,3 +1,9 @@
+package Day06
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
+
 fun main() {
     fun String.indexOfFirstDistinctSubString(length: Int) = length + windowed(length).indexOfFirst { candidate ->
         candidate.toSet().size == candidate.length

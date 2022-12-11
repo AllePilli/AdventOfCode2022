@@ -1,3 +1,9 @@
+package Day07
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
+
 fun main() {
     val cdCommandRgx = """\$ cd (.*)""".toRegex()
     val fileRgx = """(\d+) (.*)""".toRegex()
@@ -63,7 +69,7 @@ private open class File(val name: String, val size: Int) {
 
     override fun equals(other: Any?): Boolean = name == (other as? Directory)?.name && size == other.size
 
-    override fun toString(): String = "File($name, $size)"
+    override fun toString(): String = "Day07.File($name, $size)"
 }
 
 private class Directory(name: String, val parent: Directory?, val children: MutableList<File> = mutableListOf()): File(name, -1) {

@@ -1,3 +1,9 @@
+package Day02
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
+
 fun main() {
     fun prepareInput(input: List<String>) = input.map { line ->
         line.split(" ").map(String::first)
@@ -17,13 +23,13 @@ fun main() {
     check(part2(testInput) == 12)
 
     val input = prepareInput(readInput("Day02"))
-    val part1 = part1(input)
-    val part2 = part2(input)
-    println(part1)
-    println(part2)
+    measureAndPrintTimeMillis {
+        checkAndPrint(part1(input), 15337)
+    }
 
-    check(part1 == 15337)
-    check(part2 == 11696)
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), 11696)
+    }
 }
 
 private fun matchScore(player: Hand, opponent: Hand) =
@@ -56,6 +62,6 @@ private enum class Hand(val score: Int) {
 
     companion object {
         fun fromScore(score: Int): Hand = values().find { it.score == score }
-            ?: error("No Hand found for score $score")
+            ?: error("No Day02.Hand found for score $score")
     }
 }

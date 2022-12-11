@@ -1,3 +1,8 @@
+package Day10
+
+import checkAndPrint
+import measureAndPrintTimeMillis
+import readInput
 import kotlin.math.abs
 
 fun main() {

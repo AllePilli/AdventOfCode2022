@@ -1,3 +1,9 @@
+package Day03
+
+import checkAndPrint
+import measureAndPrintTimeNano
+import readInput
+
 fun main() {
     fun part1(input: List<String>): Int = input.sumOf { line ->
         val compartmentSize = line.length / 2
