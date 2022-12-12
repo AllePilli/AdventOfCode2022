@@ -52,6 +52,15 @@ fun <T> List<List<T>>.transpose(): List<List<T>> = List(first().size) { col ->
     }
 }
 
+@JvmName("sumOfInt")
+fun Iterable<Int>.mult(): Int {
+    var product: Int = 1
+    for (element in this) {
+        product *= element
+    }
+    return product
+}
+
 inline fun <T> Iterable<T>.multOf(selector: (T) -> Int): Int {
     var product = 1
     for (element in this) {
