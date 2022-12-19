@@ -106,3 +106,5 @@ fun Pair<Int, Int>.directionsTo(other: Pair<Int, Int>) = buildList {
 enum class Direction {
     Up, Right, Down, Left
 }
+
+fun BigInteger.divides(other: BigInteger): Boolean = other.mod(this) == BigInteger.ZERO
