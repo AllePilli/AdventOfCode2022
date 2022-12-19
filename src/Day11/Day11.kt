@@ -3,7 +3,6 @@ package Day11
 import checkAndPrint
 import divides
 import measureAndPrintTimeMillis
-import multOf
 import readInput
 import java.math.BigDecimal
 import java.math.BigInteger
@@ -39,23 +38,26 @@ fun main() {
             )
         }
 
-    fun part1(input: List<Monkey>): Int {
-        repeat(20) { round ->
+    fun gatherResult(input: List<Monkey>) = input.map(Monkey::inspectCnt)
+        .sortedDescending()
+        .take(2)
+        .let { (first, second) -> first.toBigInteger() * second.toBigInteger() }
+
+    fun part1(input: List<Monkey>): BigInteger {
+        val three = BigDecimal(3.0)
+        repeat(20) { _ ->
             input.forEach { monkey ->
                 while (monkey.items.peek() != null) {
                     val item = monkey.items.poll()!!.let {
                         monkey.operation.perform(it)
                             .toBigDecimal()
-                            .divide(
-                                BigDecimal(3.0),
-                                0,
-                                RoundingMode.DOWN
-                            ).toBigInteger()
+                            .divide(three, 0, RoundingMode.DOWN)
+                            .toBigInteger()
                     }
                     monkey.inspectCnt++
 
                     val nextMonkeyId = with(monkey.test) {
-                        if (item.mod(divisor) == BigInteger.ZERO) trueId else falseId
+                        if (divisor.divides(item)) trueId else falseId
                     }
 
                     input[nextMonkeyId].items.offer(item)
@@ -63,9 +65,7 @@ fun main() {
             }
         }
 
-        return input.sortedByDescending { it.inspectCnt }
-            .take(2)
-            .multOf { it.inspectCnt.toInt() }
+        return gatherResult(input)
     }
 
     fun part2(input: List<Monkey>): BigInteger {
@@ -76,9 +76,8 @@ fun main() {
         repeat(10000) { _ ->
             input.forEach { monkey ->
                 while (monkey.items.peek() != null) {
-                    val (item, id) = monkey.items.poll()!!.let {
-                        monkey.operation.performAndTest(it, monkey.test)
-                    }
+                    val (item, id) = monkey.operation
+                        .performAndTest(monkey.items.poll()!!, monkey.test)
 
                     monkey.inspectCnt++
 
@@ -87,17 +86,14 @@ fun main() {
             }
         }
 
-        return input.map { it.inspectCnt }
-            .sortedDescending()
-            .take(2)
-            .fold(BigInteger.ONE) { acc, l -> acc * l.toBigInteger() }
+        return gatherResult(input)
     }
 
-    check(part1(readInput("Day11_test").prepareInput()) == 10605)
+    check(part1(readInput("Day11_test").prepareInput()) == BigInteger("10605"))
     check(part2(readInput("Day11_test").prepareInput()) == BigInteger("2713310158"))
 
     measureAndPrintTimeMillis {
-        checkAndPrint(part1(readInput("Day11").prepareInput()), 108240)
+        checkAndPrint(part1(readInput("Day11").prepareInput()), BigInteger("108240"))
     }
 
     measureAndPrintTimeMillis {
@@ -108,9 +104,9 @@ fun main() {
 private data class Monkey(val items: Queue<BigInteger>, val operation: Operation, val test: Test) {
     var inspectCnt = 0L
 }
-private data class Test(val divisor: BigInteger, val trueId: Int, val falseId: Int)
+private class Test(val divisor: BigInteger, val trueId: Int, val falseId: Int)
 
-private data class Operation(val operationString: String) {
+private class Operation(operationString: String) {
     private val operationList = operationString.split(" ")
         .let { (left, op, right) ->
             val leftNew = if (left != "old") left.toBigInteger() else left
