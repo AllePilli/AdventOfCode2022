@@ -11,6 +11,8 @@ import kotlin.math.abs
 import kotlin.math.absoluteValue
 
 fun main() {
+    val minHeight = 'a'.code
+
     fun prepareInput(input: List<String>): List<List<Int>> = input.map { line ->
         line.map { c -> c.code }
     }
@@ -47,12 +49,55 @@ fun main() {
         return graph.dijkstra(startPos, endPos)
     }
 
+    fun part2(input: List<String>): BigInteger {
+        val grid = prepareInput(input)
+        val graph = Graph()
+        val potentialStartingPositions = mutableListOf<Pair<Int, Int>>()
+
+        for (i in grid.indices) {
+            for (j in grid[i].indices) {
+                val currPos = i to j
+                val currHeight = when (val height = grid[currPos]) {
+                    'S'.code -> 'a'.code
+                    'E'.code -> 'z'.code
+                    else -> height
+                }
+
+                if (currHeight == 'a'.code) potentialStartingPositions.add(currPos)
+
+                grid.getDirectNeighbouringIndices(currPos)
+                    .associateWith { neighbourPos ->
+                        when (val height = grid[neighbourPos]) {
+                            'S'.code -> 'a'.code
+                            'E'.code -> 'z'.code
+                            else -> height
+                        }
+                    }
+                    .filterValues { neighbourHeight -> neighbourHeight <= currHeight || neighbourHeight == currHeight + 1 }
+                    .forEach { graph.addDirectedEdge(currPos, it.key) }
+            }
+        }
+
+        val endPos = grid.indicesOf('E'.code)
+        val virtualStart = Pair(-1, -1)
+
+        potentialStartingPositions.forEach { pos ->
+            graph.addDirectedEdge(virtualStart, pos)
+        }
+
+        return graph.dijkstra(virtualStart, endPos) - BigInteger.ONE // minus one for weight of virtualStart edge
+    }
+
     val testInput = readInput("Day12_test")
     check(part1(testInput) == BigInteger("31"))
+    check(part2(testInput) == BigInteger("29"))
 
     val input = readInput("Day12")
     measureAndPrintTimeMillis {
         checkAndPrint(part1(input), BigInteger("497"))
+    }
+    measureAndPrintTimeMillis {
+        checkAndPrint(part2(input), BigInteger("492"))
     }
 }
 
