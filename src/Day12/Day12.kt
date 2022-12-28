@@ -7,12 +7,8 @@ import indicesOf
 import measureAndPrintTimeMillis
 import readInput
 import java.math.BigInteger
-import kotlin.math.abs
-import kotlin.math.absoluteValue
 
 fun main() {
-    val minHeight = 'a'.code
-
     fun prepareInput(input: List<String>): List<List<Int>> = input.map { line ->
         line.map { c -> c.code }
     }
