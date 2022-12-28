@@ -52,6 +52,15 @@ fun <T> List<List<T>>.transpose(): List<List<T>> = List(first().size) { col ->
     }
 }
 
+fun <T> List<List<T>>.indicesOf(value: T): Pair<Int, Int> {
+    for (i in indices) {
+        for (j in get(i).indices) {
+            if (get(i)[j] == value) return i to j
+        }
+    }
+    return -1 to -1
+}
+
 @JvmName("sumOfInt")
 fun Iterable<Int>.mult(): Int {
     var product: Int = 1
@@ -68,6 +77,13 @@ inline fun <T> Iterable<T>.multOf(selector: (T) -> Int): Int {
     }
     return product
 }
+
+operator fun <T> List<List<T>>.get(position: Pair<Int, Int>): T = this[position.first][position.second]
+
+fun <T> List<List<T>>.getDirectNeighbouringIndices(position: Pair<Int, Int>): List<Pair<Int, Int>> =
+    listOf(0 to -1, 1 to 0, 0 to 1, -1 to 0)
+        .map { (dx, dy) -> position.first + dx to position.second + dy }
+        .filter { (x, y) -> x in indices && y in this[x].indices }
 
 fun <T> List<List<T>>.onEdge(idx1: Int, idx2: Int): Boolean =
     idx1 == 0 || idx1 == size - 1 || idx2 == 0 || idx2 == get(idx1).size - 1
