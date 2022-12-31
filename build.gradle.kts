@@ -15,6 +15,18 @@ tasks {
         }
     }
 
+    jar {
+        manifest {
+            attributes["Main-Class"] = "Day14.Day14Kt"
+        }
+
+        configurations["compileClasspath"].forEach { file: File ->
+            from(zipTree(file.absoluteFile))
+        }
+
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
+
     wrapper {
         gradleVersion = "7.6"
     }

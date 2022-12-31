@@ -13,7 +13,7 @@ import kotlin.system.measureTimeMillis
 
 fun readInput(name: String): List<String> {
     val dayName = if ('_' in name) name.split("_").first() else name
-    return File("src/$dayName", "$name.txt").readLines()
+    return File("/Users/allesio/IdeaProjects/AdventOfCode2022/src/$dayName", "$name.txt").readLines()
 }
 
 /**
@@ -124,3 +124,36 @@ enum class Direction {
 }
 
 fun BigInteger.divides(other: BigInteger): Boolean = other.mod(this) == BigInteger.ZERO
+
+fun <T> Iterable<T>.minMaxRange(selector: (T) -> Int): IntRange {
+    val iterator = iterator()
+    if (!iterator.hasNext()) throw NoSuchElementException()
+
+    var minValue = selector(iterator.next())
+    var maxValue = minValue
+
+    while (iterator.hasNext()) {
+        val v = selector(iterator.next())
+        if (minValue > v) minValue = v
+        if (v > maxValue) maxValue = v
+    }
+
+    return minValue..maxValue
+}
+
+object TerminalUtils {
+    const val ESC = "\u001b"
+
+    fun hideTerminalCursor() {
+        print("$ESC[?251")
+    }
+
+    fun restoreTerminalCursor() {
+        print("$ESC[?25h")
+    }
+
+    fun clearTerminal() {
+        print("$ESC[2J") // clear terminal
+        print("$ESC[0;0H") // place cursor at top left corner
+    }
+}
