@@ -106,6 +106,9 @@ fun Pair<Int, Int>.move(direction: Direction, amt: Int = 1) = when (direction) {
     Direction.Left -> copy(first = first - amt)
 }
 
+/**
+ * Also called the Manhattan distance
+ */
 fun Pair<Int, Int>.discreteDistanceTo(other: Pair<Int, Int>) = abs(first - other.first) + abs(second - other.second)
 
 fun Pair<Int, Int>.touches(other: Pair<Int, Int>) = (first == other.first && abs(second - other.second) == 1)
