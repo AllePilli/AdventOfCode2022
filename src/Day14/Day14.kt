@@ -71,6 +71,17 @@ fun main() {
     }
 
     fun part2(input: Set<Pair<Int, Int>>): Int {
+        val xMap = hashMapOf<Int, MutableList<Pair<Int, Int>>>()
+        val yMap = hashMapOf<Int, MutableList<Pair<Int, Int>>>()
+
+        input.forEach { position ->
+            xMap.computeIfAbsent(position.first) { mutableListOf() }
+                .add(position)
+
+            yMap.computeIfAbsent(position.second) { mutableListOf() }
+                .add(position)
+        }
+
         val sandAtRest: MutableList<Pair<Int, Int>> = mutableListOf()
         var currSand = startPosition.copy()
         val maxRocksY = input.maxOf { (_, y) -> y }
@@ -79,12 +90,8 @@ fun main() {
             .map { floorX -> floorX to (maxRocksY + 2) }
             .toMutableList()
 
-        fun positionFree(position: Pair<Int, Int>): Boolean {
-            return position.second < maxRocksY + 2 && position !in input && position !in sandAtRest
-
-//            return if (position.second == maxRocksY + 2) false
-//            else position !in input && position !in sandAtRest
-        }
+        fun positionFree(position: Pair<Int, Int>): Boolean =
+            position.second < maxRocksY + 2 && position !in input && position !in sandAtRest
 
         if (showAnimationInTerminal) TerminalUtils.hideTerminalCursor()
         while (sandAtRest.lastOrNull() != startPosition) {
@@ -104,25 +111,33 @@ fun main() {
                 Thread.sleep(500)
             }
 
-            val down = currSand.copy(second = currSand.second + 1)
-            if (positionFree(down)) {
-                currSand = down
-                continue
-            }
+            // Try to go down
+            val newY = xMap.getOrPut(currSand.first) { mutableListOf(currSand) }
+                .minOfOrNull { it.second }
+                ?.let { it - 1 }
+                ?: (maxRocksY + 1)
+            currSand = currSand.copy(second = newY)
 
-            val diagLeft = down.copy(first = down.first - 1)
+            val diagLeft = currSand.first - 1 to newY
             if (positionFree(diagLeft)) {
                 currSand = diagLeft
                 continue
             }
 
-            val diagRight = down.copy(first = down.first + 1)
+            val diagRight = currSand.first + 1 to newY
             if (positionFree(diagRight)) {
                 currSand = diagRight
                 continue
             }
 
             sandAtRest += currSand.copy()
+
+            xMap.computeIfAbsent(currSand.first) { mutableListOf() }
+                .add(currSand)
+
+            yMap.computeIfAbsent(currSand.second) { mutableListOf() }
+                .add(currSand)
+
             currSand = startPosition.copy()
         }
         if (showAnimationInTerminal) TerminalUtils.restoreTerminalCursor()
@@ -140,6 +155,6 @@ fun main() {
     }
 
     measureAndPrintTimeMillis {
-        checkAndPrint(part2(input))
+        checkAndPrint(part2(input), 32041)
     }
 }
