@@ -2,11 +2,8 @@ package Day15
 
 import checkAndPrint
 import discreteDistanceTo
-import manhattanEdge
-import manhattanEdgeTerms
 import measureAndPrintTimeMillis
 import readInput
-import java.lang.IllegalStateException
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.min
