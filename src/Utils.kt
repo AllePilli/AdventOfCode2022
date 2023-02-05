@@ -111,6 +111,33 @@ fun Pair<Int, Int>.move(direction: Direction, amt: Int = 1) = when (direction) {
  */
 fun Pair<Int, Int>.discreteDistanceTo(other: Pair<Int, Int>) = abs(first - other.first) + abs(second - other.second)
 
+fun Pair<Int, Int>.manhattanEdge(radius: Int): List<Pair<Int, Int>> = manhattanEdgeTerms(radius)
+    .map { (dx, dy) -> Pair(first + dx, second + dy) }
+
+fun manhattanEdgeTerms(radius: Int): List<Pair<Int, Int>> {
+    if (radius < 0) throw IllegalArgumentException("Radius cannot be < 0: $radius")
+    if (radius == 0) return listOf(Pair(0, 0))
+
+    val positiveQuadrantEdgeTerms = (0..radius).map { term ->
+        Pair(radius - term, term)
+    }
+
+    val quadrantModifiers = listOf(
+        Pair(1, 1),
+        Pair(-1, 1),
+        Pair(-1, -1),
+        Pair(1, -1)
+    )
+
+    return buildList {
+        quadrantModifiers.forEach { (mx, my) ->
+            addAll(
+                positiveQuadrantEdgeTerms.map { (dx, dy) -> Pair(mx * dx, my * dy) }
+            )
+        }
+    }
+}
+
 fun Pair<Int, Int>.touches(other: Pair<Int, Int>) = (first == other.first && abs(second - other.second) == 1)
         || (second == other.second && abs(first - other.first) == 1)
 
